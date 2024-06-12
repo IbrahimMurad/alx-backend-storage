@@ -5,9 +5,8 @@ CREATE TRIGGER reset_valid_email
 AFTER UPDATE ON users
 FOR EACH ROW
 BEGIN
-	IF OLD.email != NEW.email THEN
-		UPDATE users
-		SET users.valid_email = 0;
-	END IF;
+		IF NEW.email != OLD.email THEN
+				SET users.valid_email = 0;
+		END IF;
 END;
 DELIMITER ;
