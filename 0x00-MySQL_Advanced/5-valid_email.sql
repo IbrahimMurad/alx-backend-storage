@@ -7,7 +7,7 @@ FOR EACH ROW
 BEGIN
 	IF OLD.email != NEW.email
 		UPDATE users
-		SET users.valid_email = 0
+		RESET users.valid_email
 	END IF
 END;
 DELIMITER ;
