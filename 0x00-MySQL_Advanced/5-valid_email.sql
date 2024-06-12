@@ -9,5 +9,5 @@ BEGIN
 		UPDATE users
 		SET users.valid_email = 0;
 	END IF;
-END$$
+END;
 DELIMITER ;
