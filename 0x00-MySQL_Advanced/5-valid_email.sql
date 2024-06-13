@@ -6,9 +6,7 @@ AFTER UPDATE ON users
 FOR EACH ROW
 BEGIN
 	IF NEW.email != OLD.email THEN
-		UPDATE users
-		SET users.valid_email = 0
-		WHERE users.id = NEW.id;
+		SET users.valid_email = 0;
 	END IF;
 END$$
 DELIMITER ;
