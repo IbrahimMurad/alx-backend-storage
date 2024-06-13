@@ -20,9 +20,7 @@ BEGIN
 		SET @project_id = LAST_INSERT_ID();
 	END IF;
 
-	UPDATE corrections
-	SET corrections.score=score
-	WHERE corrections.user_id=user_id AND corrections.project_id=project_id;
+	INSERT INTO corrections (user_id, project_id, score) VALUES (user_id, project_id, score);
 END//
 
 DELIMITER ;
