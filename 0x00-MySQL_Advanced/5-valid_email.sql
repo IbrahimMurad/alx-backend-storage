@@ -8,5 +8,5 @@ BEGIN
 		IF NEW.email != OLD.email AND NEW.valid_email = OLD.valid_email THEN
 			SET users.valid_email = 0;
 		END IF;
-END;
+END$$
 DELIMITER ;
