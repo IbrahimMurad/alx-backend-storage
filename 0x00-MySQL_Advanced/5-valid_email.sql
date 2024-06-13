@@ -6,7 +6,7 @@ BEFORE UPDATE ON user
 FOR EACH ROW
 BEGIN
 		IF NEW.email != OLD.email THEN
-				RESET NEW.valid_email = 0;
+				RESET NEW.valid_email;
 		END IF;
 END$$
 DELIMITER ;
