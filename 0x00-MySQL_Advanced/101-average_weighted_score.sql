@@ -14,9 +14,19 @@ BEGIN
 		IF done THEN
 			LEAVE user_loop;
 		END IF;
-		CALL ComputeAverageWeightedScoreForUser(user_id);
+		UPDATE users
+		SET average_score = (
+			SELECT (sum_weighted_score / sum_weight) AS average_weighted_score
+			FROM (
+				SELECT SUM(projects.weight * corrections.score) AS sum_weighted_score,
+				SUM(projects.weight) AS sum_weight
+				FROM corrections JOIN projects ON corrections.project_id=projects.id
+				WHERE corrections.user_id = user_id
+			) AS temp
+		)
+		WHERE users.id = user_id;
 	END LOOP;
-	
+
 	CLOSE user_ids;
 END //
 DELIMITER ;
