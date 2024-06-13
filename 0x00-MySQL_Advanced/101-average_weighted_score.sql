@@ -2,7 +2,7 @@
 -- that computes and store the average weighted score for a student.
 
 DELIMITER //
-CREATE PROCEDURE ComputeAverageWeightedScoreForUser(IN user_id INT)
+CREATE PROCEDURE ComputeAverageWeightedScoreForUsers()
 BEGIN
 	UPDATE users
 	SET average_score = (
@@ -11,9 +11,8 @@ BEGIN
 			SELECT SUM(projects.weight * corrections.score) AS sum_weighted_score,
 			SUM(projects.weight) AS sum_weight
 			FROM corrections JOIN projects ON corrections.project_id=projects.id
-			WHERE corrections.user_id = user_id
+			WHERE corrections.user_id = users.id
 		) AS temp
-	)
-		WHERE users.id = user_id;
+	);
 END//
 DELIMITER ;
