@@ -1,3 +1,2 @@
 //  inserts a document in the collection school that have one attribute "name" with value "Holberton school"
-school = {"name" : "Holberton school"}
-db.collection.insertOne(school)
+db.school.insertOne({"name" : "Holberton school"})
