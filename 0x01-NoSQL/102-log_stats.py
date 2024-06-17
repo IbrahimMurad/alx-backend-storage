@@ -40,4 +40,4 @@ if __name__ == "__main__":
     print("{} status check".format(status_checked))
     print("IPs:")
     for ip in IPs:
-        print("{}: {}".format(ip.get("_id"), ip.get("numberOfIps")))
+        print("\t{}: {}".format(ip.get("_id"), ip.get("numberOfIps")))
