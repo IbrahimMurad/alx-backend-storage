@@ -24,10 +24,9 @@ class Cache:
 
     def get(self, key: str, fn: Optional[Callable]) -> Optional[Union[str, bytes, int, float]]:
         """ gets the data from redis and uses fn to decode it """
-        if fn:
-            return fn((self._redis).get(key))
-        if self._redis.get(key):
-            return (self._redis).get(key)
+        value = self._redis.get(key)
+        if value:
+            return fn(value) if fn else value
         return None
     
     def get_str(self, key: str) -> str:
