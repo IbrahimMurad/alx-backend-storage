@@ -2,8 +2,7 @@
 """ This module defines a class that uses redis to cache data """
 import redis
 from uuid import uuid4
-from typing import Callable
-from typing import Union, Optional
+from typing import Callable, Union, Optional
 from functools import wraps
 
 
@@ -18,6 +17,18 @@ def count_calls(f: Callable) -> Callable:
         return f(self, *args, **kwargs)
     return wrapper
 
+def call_history(f: Callable) -> Callable:
+    """ a function wrapper to store its history """
+    @wraps(f)
+    def wrapper(self, *args, **kwargs):
+        """ stores the history of inputs and outputs for the passed function """
+        input_key = f.__qualname__ + ":inputs"
+        output_key = f.__qualname__ + ":outputs"
+        self._redis.rpush(input_key, str(args))
+        output = f(self, *args, **kwargs)
+        self._redis.rpush(output_key, output)
+        return output
+    return wrapper
 
 class Cache:
     """ takes data and caches it and stores it in redis """
@@ -30,6 +41,7 @@ class Cache:
         self._redis.flushdb()
 
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """ takes data and stores it in redis with a random generated key """
         key = str(uuid4())
