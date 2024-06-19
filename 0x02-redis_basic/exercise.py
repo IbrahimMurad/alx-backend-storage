@@ -3,7 +3,7 @@
 import redis
 from uuid import uuid4
 from typing import Callable
-from typing import Union, Optional, Any
+from typing import Union, Optional
 
 
 class Cache:
@@ -16,13 +16,13 @@ class Cache:
         )
         self._redis.flushdb()
 
-    def store(self, data: Any) -> str:
+    def store(self, data: Union[str, bytes, int, float]) -> str:
         """ takes data and stores it in redis with a random generated key """
         key = str(uuid4())
         self._redis.set(key, data)
         return key
 
-    def get(self, key: str, fn: Optional[Callable]) -> Any:
+    def get(self, key: str, fn: Optional[Callable]) -> Optional[Union[str, bytes, int, float]]:
         """ gets the data from redis and uses fn to decode it """
         if fn:
             return fn((self._redis).get(key))
