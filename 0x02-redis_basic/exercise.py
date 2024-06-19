@@ -12,7 +12,7 @@ def count_calls(f: Callable) -> Callable:
     @wraps(f)
     def wrapper(self, *args, **kwargs):
         """ wrapper function """
-        if not self.get(f.__qualname__):
+        if not self._redis.get(f.__qualname__):
             self._redis.set(f.__qualname__, 0)
         self._redis.incr(f.__qualname__)
         return f(self, *args, **kwargs)
