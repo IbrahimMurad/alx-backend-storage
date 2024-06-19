@@ -6,26 +6,26 @@ from typing import Callable, Union, Optional
 from functools import wraps
 
 
-def count_calls(f: Callable) -> Callable:
+def count_calls(method: Callable) -> Callable:
     """ counts the number of times a method is called """
-    @wraps(f)
+    @wraps(method)
     def wrapper(self, *args, **kwargs):
         """ counts the number of times a method is called """
-        if not self._redis.exists(f.__qualname__):
-            self._redis.set(f.__qualname__, 0)
-        self._redis.incr(f.__qualname__)
-        return f(self, *args, **kwargs)
+        if not self._redis.exists(method.__qualname__):
+            self._redis.set(method.__qualname__, 0)
+        self._redis.incr(method.__qualname__)
+        return method(self, *args, **kwargs)
     return wrapper
 
-def call_history(f: Callable) -> Callable:
+def call_history(method: Callable) -> Callable:
     """ a function wrapper to store its history """
-    @wraps(f)
+    @wraps(method)
     def wrapper(self, *args, **kwargs):
         """ stores the history of inputs and outputs for the passed function """
-        input_key = f.__qualname__ + ":inputs"
-        output_key = f.__qualname__ + ":outputs"
+        input_key = method.__qualname__ + ":inputs"
+        output_key = method.__qualname__ + ":outputs"
         self._redis.rpush(input_key, str(args))
-        output = f(self, *args, **kwargs)
+        output = method(self, *args, **kwargs)
         self._redis.rpush(output_key, output)
         return output
     return wrapper
