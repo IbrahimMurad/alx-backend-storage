@@ -11,8 +11,8 @@ def count_calls(f: Callable) -> Callable:
     """ counts the number of times a method is called """
     @wraps(f)
     def wrapper(self, *args, **kwargs):
-        """ wrapper function """
-        if not self._redis.get(f.__qualname__):
+        """ counts the number of times a method is called """
+        if not self._redis.exists(f.__qualname__):
             self._redis.set(f.__qualname__, 0)
         self._redis.incr(f.__qualname__)
         return f(self, *args, **kwargs)
@@ -38,7 +38,7 @@ class Cache:
 
     def get(self, key: str, fn: Optional[Callable] = None) -> Optional[Union[str, bytes, int, float]]:
         """ gets the data from redis and uses fn to decode it """
-        value = self._redis.get(key)
+        value = self._redis.exists(key)
         if value:
             return fn(value) if fn else value
         return None
