@@ -8,7 +8,6 @@ from functools import wraps
 from typing import Callable
 
 
-
 def cache_requests(f: Callable) -> Callable:
     """ Caches the how many requests are made to a certain url
     with an expiration time of 10 seconds. """
@@ -22,6 +21,7 @@ def cache_requests(f: Callable) -> Callable:
         red.expire(key, 10)
         return f(url)
     return wrapper
+
 
 @cache_requests
 def get_page(url: str) -> str:
