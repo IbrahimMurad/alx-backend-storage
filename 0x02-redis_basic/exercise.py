@@ -17,11 +17,13 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return wrapper
 
+
 def call_history(method: Callable) -> Callable:
     """ a function wrapper to store its history """
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        """ stores the history of inputs and outputs for the passed function """
+        """ stores the history of inputs and outputs
+        for the passed function """
         input_key = method.__qualname__ + ":inputs"
         output_key = method.__qualname__ + ":outputs"
         self._redis.rpush(input_key, str(args))
@@ -29,6 +31,7 @@ def call_history(method: Callable) -> Callable:
         self._redis.rpush(output_key, output)
         return output
     return wrapper
+
 
 class Cache:
     """ takes data and caches it and stores it in redis """
@@ -48,12 +51,14 @@ class Cache:
         self._redis.set(key, data)
         return key
 
-    def get(self, key: str, fn: Optional[Callable] = None) -> Optional[Union[str, bytes, int, float]]:
+    def get(self, key: str,
+            fn: Optional[Callable] = None
+            ) -> Optional[Union[str, bytes, int, float]]:
         """ gets the data from redis and uses fn to decode it """
         if self._redis.exists(key):
             return fn(self._redis.get(key)) if fn else self._redis.get(key)
         return None
-    
+
     def get_str(self, key: str) -> str:
         """ gets the data from redis and returns it as a string """
         return self.get(key, fn=str)
