@@ -18,7 +18,6 @@ def caching_decorator(method: Callable) -> Callable:
         red.incr(count_key)
         if red.exists(result_key):
             return red.get(result_key).decode('utf-8')
-        red.set(count_key, 1)
         result = method(url)
         red.setex(result_key, 10, result)
         return result
