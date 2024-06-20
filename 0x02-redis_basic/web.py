@@ -13,12 +13,15 @@ def cache_requests(f: Callable) -> Callable:
     with an expiration time of 10 seconds. """
     @wraps(f)
     def wrapper(url):
-        red = redis.Redis()
+        red = redis.Redis(
+            host='localhost',
+            port=6379
+        )
         key = "count:{{{}}}".format(url)
         if not red.exists(key):
             red.set(key, 0)
         red.incr(key)
-        red.expire(key, 10)
+        red.expire(name=key, time=10)
         return f(url)
     return wrapper
 
