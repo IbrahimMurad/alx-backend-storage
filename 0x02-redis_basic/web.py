@@ -30,5 +30,7 @@ def cache_requests(f: Callable) -> Callable:
 def get_page(url: str) -> str:
     """ uses the requests module to obtain
     the HTML content of a particular URL and returns it. """
-    r = get(url, timeout=10)
+    r = get(url)
+    if r.status_code != 200:
+        return None
     return r.text
