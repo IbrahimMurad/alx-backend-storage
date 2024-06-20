@@ -18,7 +18,7 @@ def cache_requests(f: Callable) -> Callable:
         if not red.exists(key):
             red.set(key, 0)
         red.incr(key)
-        red.expire(key, 10)
+        red.expire(key, 10, nx=True)
         return f(url)
     return wrapper
 
