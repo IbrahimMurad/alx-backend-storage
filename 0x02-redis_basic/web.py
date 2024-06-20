@@ -14,11 +14,11 @@ def cache_requests(f: Callable) -> Callable:
     @wraps(f)
     def wrapper(url):
         red = redis.Redis()
-        key = "count:{}".format(url)
+        key = "count:{{{}}}".format(url)
         if not red.exists(key):
             red.set(key, 0)
         red.incr(key)
-        red.expire(key, 10, nx=True)
+        red.expire(key, 10)
         return f(url)
     return wrapper
 
